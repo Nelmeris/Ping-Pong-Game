@@ -13,6 +13,7 @@
 		57A6189F2235658D00229485 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 57A6189E2235658D00229485 /* Assets.xcassets */; };
 		57A618A22235658D00229485 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 57A618A02235658D00229485 /* LaunchScreen.storyboard */; };
 		57A618A52235658D00229485 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 57A618A42235658D00229485 /* main.m */; };
+		57A618AD2235795500229485 /* GameViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 57A618AB2235795500229485 /* GameViewController.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -26,6 +27,8 @@
 		57A618A12235658D00229485 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		57A618A32235658D00229485 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		57A618A42235658D00229485 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
+		57A618AB2235795500229485 /* GameViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GameViewController.m; sourceTree = "<group>"; };
+		57A618AC2235795500229485 /* GameViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GameViewController.h; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -58,6 +61,8 @@
 		57A618942235658B00229485 /* Ping-Pong-Game */ = {
 			isa = PBXGroup;
 			children = (
+				57A618AC2235795500229485 /* GameViewController.h */,
+				57A618AB2235795500229485 /* GameViewController.m */,
 				57A618952235658B00229485 /* AppDelegate.h */,
 				57A618962235658B00229485 /* AppDelegate.m */,
 				57A618982235658B00229485 /* ViewController.h */,
@@ -141,6 +146,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				57A618AD2235795500229485 /* GameViewController.m in Sources */,
 				57A6189A2235658B00229485 /* ViewController.m in Sources */,
 				57A618A52235658D00229485 /* main.m in Sources */,
 				57A618972235658B00229485 /* AppDelegate.m in Sources */,
