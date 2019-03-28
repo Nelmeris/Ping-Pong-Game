@@ -15,7 +15,7 @@
 #define MAX_SCORE 6
 
 #define MIN_AI_SPEED 3
-#define MAX_AI_SPEED 10
+#define MAX_AI_SPEED 15
 
 #define MIN_BALL_SPEED 3
 #define MAX_BALL_SPEED 10
@@ -33,6 +33,8 @@
 @property (nonatomic) float dy;
 @property (nonatomic) float ballSpeed;
 @property (nonatomic) float iSpeed;
+@property (nonatomic) float oldISpeed;
+@property (nonatomic) float newISpeed;
 @property (strong, nonatomic) UILabel *scoreTop;
 @property (strong, nonatomic) UILabel *scoreBottom;
 @property (nonatomic) CGPoint paddleTopOldPosition;
@@ -97,6 +99,8 @@
     _paddleTopOldPosition = _paddleTop.center;
     _paddleBottomOldPosition = _paddleBottom.center;
     _iSpeed = fabs(cos(_ball.center.x));
+    _newISpeed = _iSpeed;
+    _oldISpeed = _iSpeed;
 }
 
 - (void)stop {
@@ -114,18 +118,18 @@
     [formatter setDateFormat:@"SSS"];
     long milliseconds = [[formatter stringFromDate:_timer.fireDate] integerValue];
     if (milliseconds / 100 == 0) {
-        _iSpeed = fabs(cos(_ball.center.x));
+        _oldISpeed = _iSpeed;
+        _newISpeed = fabs(cos(_ball.center.x));
     }
+    _iSpeed += (_newISpeed - _oldISpeed) / 60;
     int scalar = (_ball.center.x - _paddleTop.center.x) / fabs(_ball.center.x - _paddleTop.center.x);
-    float newPosition = _paddleTop.center.x + MIN(fabs(_ball.center.x - _paddleTop.center.x) / 15 * _iSpeed, MAX_AI_SPEED) * scalar;
+    float newPosition = _paddleTop.center.x + MIN(fabs(_ball.center.x - _paddleTop.center.x) / 25 * _iSpeed, MAX_AI_SPEED) * scalar;
     _paddleTop.center = CGPointMake(newPosition, _paddleTop.center.y);
     
     [self checkCollision:CGRectMake(0, 0, 20, SCREEN_HEIGHT) X:fabs(_dx) Y:0];
     [self checkCollision:CGRectMake(SCREEN_WIDTH, 0, 20, SCREEN_HEIGHT) X:-fabs(_dx) Y:0];
-    if ([self checkCollision:_paddleTop.frame X:(_ball.center.x - _paddleTop.center.x) / 32.0 Y:1]) {
-        [self increaseSpeed];
-    }
-    if ([self checkCollision:_paddleBottom.frame X:(_ball.center.x - _paddleBottom.center.x) / 32.0 Y:-1]) {
+    if ([self checkCollision:_paddleTop.frame X:(_ball.center.x - _paddleTop.center.x) / 32.0 Y:1] ||
+        [self checkCollision:_paddleBottom.frame X:(_ball.center.x - _paddleBottom.center.x) / 32.0 Y:-1]) {
         [self increaseSpeed];
     }
     if (milliseconds / 5 == 0) {
