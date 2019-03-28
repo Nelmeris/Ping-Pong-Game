@@ -39,6 +39,26 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		5705130B224D7E1B005EEC9A /* App */ = {
+			isa = PBXGroup;
+			children = (
+				57A618952235658B00229485 /* AppDelegate.h */,
+				57A618962235658B00229485 /* AppDelegate.m */,
+				57A618A02235658D00229485 /* LaunchScreen.storyboard */,
+				57A618A42235658D00229485 /* main.m */,
+			);
+			path = App;
+			sourceTree = "<group>";
+		};
+		5705130D224D7E57005EEC9A /* GameViewController */ = {
+			isa = PBXGroup;
+			children = (
+				57A618AC2235795500229485 /* GameViewController.h */,
+				57A618AB2235795500229485 /* GameViewController.m */,
+			);
+			path = GameViewController;
+			sourceTree = "<group>";
+		};
 		57A618892235658B00229485 = {
 			isa = PBXGroup;
 			children = (
@@ -58,15 +78,11 @@
 		57A618942235658B00229485 /* Ping-Pong-Game */ = {
 			isa = PBXGroup;
 			children = (
-				57A618AC2235795500229485 /* GameViewController.h */,
-				57A618AB2235795500229485 /* GameViewController.m */,
-				57A618952235658B00229485 /* AppDelegate.h */,
-				57A618962235658B00229485 /* AppDelegate.m */,
+				5705130B224D7E1B005EEC9A /* App */,
+				5705130D224D7E57005EEC9A /* GameViewController */,
 				57A6189B2235658B00229485 /* Main.storyboard */,
 				57A6189E2235658D00229485 /* Assets.xcassets */,
-				57A618A02235658D00229485 /* LaunchScreen.storyboard */,
 				57A618A32235658D00229485 /* Info.plist */,
-				57A618A42235658D00229485 /* main.m */,
 			);
 			path = "Ping-Pong-Game";
 			sourceTree = "<group>";

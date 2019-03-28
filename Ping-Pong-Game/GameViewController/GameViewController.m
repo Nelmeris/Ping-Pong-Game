@@ -1,5 +1,5 @@
 //
-//  ViewController.m
+//  GameViewController.m
 //  Ping-Pong-Game
 //
 //  Created by Artem Kufaev on 10/03/2019.
@@ -10,9 +10,35 @@
 
 #define SCREEN_WIDTH [UIScreen mainScreen].bounds.size.width
 #define SCREEN_HEIGHT [UIScreen mainScreen].bounds.size.height
-#define HALF_SCREEN_WIDTH SCREEN_WIDTH/2
-#define HALF_SCREEN_HEIGHT SCREEN_HEIGHT/2
+#define HALF_SCREEN_WIDTH SCREEN_WIDTH / 2
+#define HALF_SCREEN_HEIGHT SCREEN_HEIGHT / 2
 #define MAX_SCORE 6
+
+#define MIN_AI_SPEED 3
+#define MAX_AI_SPEED 10
+
+#define MIN_BALL_SPEED 3
+#define MAX_BALL_SPEED 10
+
+@interface GameViewController ()
+
+@property (strong, nonatomic) UIImageView *paddleTop;
+@property (strong, nonatomic) UIImageView *paddleBottom;
+@property (strong, nonatomic) UIView *gridView;
+@property (strong, nonatomic) UIView *ball;
+@property (strong, nonatomic) UITouch *topTouch;
+@property (strong, nonatomic) UITouch *bottomTouch;
+@property (strong, nonatomic) NSTimer *timer;
+@property (nonatomic) float dx;
+@property (nonatomic) float dy;
+@property (nonatomic) float ballSpeed;
+@property (nonatomic) float iSpeed;
+@property (strong, nonatomic) UILabel *scoreTop;
+@property (strong, nonatomic) UILabel *scoreBottom;
+@property (nonatomic) CGPoint paddleTopOldPosition;
+@property (nonatomic) CGPoint paddleBottomOldPosition;
+
+@end
 
 @implementation GameViewController
 
@@ -25,70 +51,6 @@
     [self ballConfiguration];
     [self scoreTopConfiguration];
     [self scoreBottomConfiguration];
-}
-
-- (void)touchesBegan:(NSSet<UITouch *> *)touches withEvent:(UIEvent *)event {
-    for (UITouch *touch in touches) {
-        CGPoint point = [touch locationInView:self.view];
-        if (_bottomTouch == nil && point.y > HALF_SCREEN_HEIGHT) {
-            _bottomTouch = touch;
-            _paddleBottom.center = CGPointMake(point.x, point.y);
-        }
-        else if (_topTouch == nil && point.y < HALF_SCREEN_HEIGHT) {
-            _topTouch = touch;
-            _paddleTop.center = CGPointMake(point.x, point.y);
-        }
-    }
-}
-
-- (void)touchesMoved:(NSSet<UITouch *> *)touches withEvent:(UIEvent *)event {
-    for (UITouch *touch in touches) {
-        CGPoint point = [touch locationInView:self.view];
-        if (touch == _topTouch) {
-            if (point.y > HALF_SCREEN_HEIGHT) {
-                _paddleTop.center = CGPointMake(point.x, HALF_SCREEN_HEIGHT);
-                return;
-            }
-            _paddleTop.center = point;
-        }
-        else if (touch == _bottomTouch) {
-            if (point.y < HALF_SCREEN_HEIGHT) {
-                _paddleBottom.center = CGPointMake(point.x, HALF_SCREEN_HEIGHT);
-                return;
-            }
-            _paddleBottom.center = point;
-        }
-    }
-}
-
-- (void)touchesEnded:(NSSet<UITouch *> *)touches withEvent:(UIEvent *)event {
-    for (UITouch *touch in touches) {
-        if (touch == _topTouch) {
-            _topTouch = nil;
-        }
-        else if (touch == _bottomTouch) {
-            _bottomTouch = nil;
-        }
-    }
-}
-
-- (void)touchesCancelled:(NSSet<UITouch *> *)touches withEvent:(UIEvent *)event {
-    [self touchesEnded:touches withEvent:event];
-}
-
-- (void)displayMessage:(NSString *)message {
-    [self stop];
-    UIAlertController *alertController = [UIAlertController alertControllerWithTitle:@"Ping Pong" message:message preferredStyle:(UIAlertControllerStyleAlert)];
-    UIAlertAction *action = [UIAlertAction actionWithTitle:@"OK" style:(UIAlertActionStyleDefault) handler:^(UIAlertAction * _Nonnull action) {
-        if ([self gameOver]) {
-            [self newGame];
-            return;
-        }
-        [self reset];
-        [self start];
-    }];
-    [alertController addAction:action];
-    [self presentViewController:alertController animated:YES completion:nil];
 }
 
 - (void)newGame {
@@ -125,13 +87,16 @@
         _dy = -_dy;
     } else if ((arc4random() % 2) == 0) {
         _dy = -1;
-    } else  {
+    } else {
         _dy = 1;
     }
     
     _ball.center = CGPointMake(HALF_SCREEN_WIDTH, HALF_SCREEN_HEIGHT);
     
-    _speed = 2;
+    _ballSpeed = MIN_BALL_SPEED;
+    _paddleTopOldPosition = _paddleTop.center;
+    _paddleBottomOldPosition = _paddleBottom.center;
+    _iSpeed = fabs(cos(_ball.center.x));
 }
 
 - (void)stop {
@@ -143,7 +108,18 @@
 }
 
 - (void)animate {
-    _ball.center = CGPointMake(_ball.center.x + _dx*_speed, _ball.center.y + _dy*_speed);
+    _ball.center = CGPointMake(_ball.center.x + _dx * _ballSpeed, _ball.center.y + _dy * _ballSpeed);
+    
+    NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
+    [formatter setDateFormat:@"SSS"];
+    long milliseconds = [[formatter stringFromDate:_timer.fireDate] integerValue];
+    if (milliseconds / 100 == 0) {
+        _iSpeed = fabs(cos(_ball.center.x));
+    }
+    int scalar = (_ball.center.x - _paddleTop.center.x) / fabs(_ball.center.x - _paddleTop.center.x);
+    float newPosition = _paddleTop.center.x + MIN(fabs(_ball.center.x - _paddleTop.center.x) / 15 * _iSpeed, MAX_AI_SPEED) * scalar;
+    _paddleTop.center = CGPointMake(newPosition, _paddleTop.center.y);
+    
     [self checkCollision:CGRectMake(0, 0, 20, SCREEN_HEIGHT) X:fabs(_dx) Y:0];
     [self checkCollision:CGRectMake(SCREEN_WIDTH, 0, 20, SCREEN_HEIGHT) X:-fabs(_dx) Y:0];
     if ([self checkCollision:_paddleTop.frame X:(_ball.center.x - _paddleTop.center.x) / 32.0 Y:1]) {
@@ -152,12 +128,22 @@
     if ([self checkCollision:_paddleBottom.frame X:(_ball.center.x - _paddleBottom.center.x) / 32.0 Y:-1]) {
         [self increaseSpeed];
     }
+    if (milliseconds / 5 == 0) {
+        _paddleTopOldPosition = _paddleTop.center;
+        _paddleBottomOldPosition = _paddleBottom.center;
+    }
     [self goal];
 }
 
 - (void)increaseSpeed {
-    _speed += 0.5;
-    if (_speed > 10) _speed = 10;
+    float paddleSpeed;
+    if (_dy > 0) {
+        paddleSpeed = sqrtf(powf(_paddleTop.center.x - _paddleTopOldPosition.x, 2) + powf(_paddleTop.center.y - _paddleTopOldPosition.y, 2)) / 30;
+    } else {
+        paddleSpeed = sqrtf(powf(_paddleBottom.center.x - _paddleBottomOldPosition.x, 2) + powf(_paddleBottom.center.y - _paddleBottomOldPosition.y, 2)) / 30;
+    }
+    
+    _ballSpeed = MAX(MIN(paddleSpeed, MAX_BALL_SPEED), MIN_BALL_SPEED);
 }
 
 - (BOOL)checkCollision: (CGRect)rect X:(float)x Y:(float)y {
@@ -169,8 +155,7 @@
     return NO;
 }
 
-- (BOOL)goal
-{
+- (BOOL)goal {
     if (_ball.center.y < 0 || _ball.center.y >= SCREEN_HEIGHT) {
         int s1 = [_scoreTop.text intValue];
         int s2 = [_scoreBottom.text intValue];
@@ -181,7 +166,7 @@
         
         int gameOver = [self gameOver];
         if (gameOver) {
-            [self displayMessage:[NSString stringWithFormat:@"Игрок %i выиграл", gameOver]];
+            [self displayMessage:[NSString stringWithFormat:@"Вы %@", (gameOver % 2 == 0) ? @"выиграли!" : @"проиграли!"]];
         } else {
             [self reset];
         }
@@ -190,6 +175,60 @@
     }
     return NO;
 }
+
+- (void)displayMessage:(NSString *)message {
+    [self stop];
+    UIAlertController *alertController = [UIAlertController alertControllerWithTitle:@"Ping Pong" message:message preferredStyle:(UIAlertControllerStyleAlert)];
+    UIAlertAction *action = [UIAlertAction actionWithTitle:@"OK" style:(UIAlertActionStyleDefault) handler:^(UIAlertAction * _Nonnull action) {
+        if ([self gameOver]) {
+            [self newGame];
+            return;
+        }
+        [self reset];
+        [self start];
+    }];
+    [alertController addAction:action];
+    [self presentViewController:alertController animated:YES completion:nil];
+}
+
+#pragma mark - Touches
+
+- (void)touchesBegan:(NSSet<UITouch *> *)touches withEvent:(UIEvent *)event {
+    for (UITouch *touch in touches) {
+        CGPoint point = [touch locationInView:self.view];
+        if (_bottomTouch == nil && point.y > HALF_SCREEN_HEIGHT) {
+            _bottomTouch = touch;
+            _paddleBottom.center = CGPointMake(point.x, point.y);
+        }
+    }
+}
+
+- (void)touchesMoved:(NSSet<UITouch *> *)touches withEvent:(UIEvent *)event {
+    for (UITouch *touch in touches) {
+        CGPoint point = [touch locationInView:self.view];
+        if (touch == _bottomTouch) {
+            if (point.y < HALF_SCREEN_HEIGHT) {
+                _paddleBottom.center = CGPointMake(point.x, HALF_SCREEN_HEIGHT);
+                return;
+            }
+            _paddleBottom.center = point;
+        }
+    }
+}
+
+- (void)touchesEnded:(NSSet<UITouch *> *)touches withEvent:(UIEvent *)event {
+    for (UITouch *touch in touches) {
+        if (touch == _bottomTouch) {
+            _bottomTouch = nil;
+        }
+    }
+}
+
+- (void)touchesCancelled:(NSSet<UITouch *> *)touches withEvent:(UIEvent *)event {
+    [self touchesEnded:touches withEvent:event];
+}
+
+#pragma mark - View stats
 
 - (void)viewDidAppear:(BOOL)animated {
     [super viewDidAppear:animated];
@@ -203,6 +242,8 @@
     
     [self resignFirstResponder];
 }
+
+#pragma mark - Configuration
 
 - (void)viewConfiguration {
     self.view.backgroundColor = [UIColor colorWithRed:100.0/255.0 green:135.0/255.0 blue:191.0/255.0 alpha:1.0];
@@ -258,6 +299,5 @@
     _scoreBottom.textAlignment = NSTextAlignmentCenter;
     [self.view addSubview:_scoreBottom];
 }
-
 
 @end
