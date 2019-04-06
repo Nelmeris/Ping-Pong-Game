@@ -46,13 +46,13 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    [self viewConfiguration];
-    [self gridConfiguration];
-    [self paddleTopConfiguration];
-    [self paddleBottomConfiguration];
-    [self ballConfiguration];
-    [self scoreTopConfiguration];
-    [self scoreBottomConfiguration];
+    [self configureController];
+    [self configureGrid];
+    [self configurePaddleTop];
+    [self configurePaddleBottom];
+    [self configureBall];
+    [self configureScoreTop];
+    [self configureScoreBottom];
 }
 
 - (void)newGame {
@@ -247,33 +247,33 @@
     [self resignFirstResponder];
 }
 
-#pragma mark - Configuration
+#pragma mark - Configures
 
-- (void)viewConfiguration {
-    self.view.backgroundColor = [UIColor colorWithRed:100.0/255.0 green:135.0/255.0 blue:191.0/255.0 alpha:1.0];
+- (void)configureController {
+    [self.view setBackgroundColor:[UIColor colorWithRed:100.0/255.0 green:135.0/255.0 blue:191.0/255.0 alpha:1.0]];
 }
 
-- (void)gridConfiguration {
+- (void)configureGrid {
     _gridView = [[UIView alloc] initWithFrame:CGRectMake(0, HALF_SCREEN_HEIGHT - 2, SCREEN_WIDTH, 4)];
     _gridView.backgroundColor = [[UIColor whiteColor] colorWithAlphaComponent:0.5];
     [self.view addSubview:_gridView];
 }
 
-- (void)paddleTopConfiguration {
+- (void)configurePaddleTop {
     _paddleTop = [[UIImageView alloc] initWithFrame:CGRectMake(30, 40, 90, 60)];
     _paddleTop.image = [UIImage imageNamed:@"paddleTop"];
     _paddleTop.contentMode = UIViewContentModeScaleAspectFit;
     [self.view addSubview:_paddleTop];
 }
 
-- (void)paddleBottomConfiguration {
+- (void)configurePaddleBottom {
     _paddleBottom = [[UIImageView alloc] initWithFrame:CGRectMake(30, SCREEN_HEIGHT - 90, 90, 60)];
     _paddleBottom.image = [UIImage imageNamed:@"paddleBottom"];
     _paddleBottom.contentMode = UIViewContentModeScaleAspectFit;
     [self.view addSubview:_paddleBottom];
 }
 
-- (void)ballConfiguration {
+- (void)configureBall {
     _ball = [[UIView alloc] initWithFrame:CGRectMake(self.view.center.x - 10, self.view.center.y - 10, 20, 20)];
     _ball.backgroundColor = [UIColor whiteColor];
     _ball.layer.cornerRadius = 10;
@@ -281,7 +281,7 @@
     [self.view addSubview:_ball];
 }
 
-- (void)scoreTopConfiguration {
+- (void)configureScoreTop {
     _scoreTop = [[UILabel alloc] initWithFrame:CGRectMake(SCREEN_WIDTH - 70, HALF_SCREEN_HEIGHT - 70, 50, 50)];
     _scoreTop.textColor = [UIColor whiteColor];
     _scoreTop.text = @"0";
@@ -295,7 +295,7 @@
     [self.view addSubview:_scoreTop];
 }
 
-- (void)scoreBottomConfiguration {
+- (void)configureScoreBottom {
     _scoreBottom = [[UILabel alloc] initWithFrame:CGRectMake(SCREEN_WIDTH - 70, HALF_SCREEN_HEIGHT + 70, 50, 50)];
     _scoreBottom.textColor = [UIColor whiteColor];
     _scoreBottom.text = @"0";

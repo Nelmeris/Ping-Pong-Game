@@ -8,7 +8,6 @@
 
 /* Begin PBXBuildFile section */
 		57A618972235658B00229485 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 57A618962235658B00229485 /* AppDelegate.m */; };
-		57A6189D2235658B00229485 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 57A6189B2235658B00229485 /* Main.storyboard */; };
 		57A6189F2235658D00229485 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 57A6189E2235658D00229485 /* Assets.xcassets */; };
 		57A618A22235658D00229485 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 57A618A02235658D00229485 /* LaunchScreen.storyboard */; };
 		57A618A52235658D00229485 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 57A618A42235658D00229485 /* main.m */; };
@@ -19,7 +18,6 @@
 		57A618922235658B00229485 /* Ping-Pong-Game.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Ping-Pong-Game.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		57A618952235658B00229485 /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
 		57A618962235658B00229485 /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
-		57A6189C2235658B00229485 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		57A6189E2235658D00229485 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		57A618A12235658D00229485 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		57A618A32235658D00229485 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -39,24 +37,25 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
-		5705130B224D7E1B005EEC9A /* App */ = {
+		5705130B224D7E1B005EEC9A /* Application */ = {
 			isa = PBXGroup;
 			children = (
 				57A618952235658B00229485 /* AppDelegate.h */,
 				57A618962235658B00229485 /* AppDelegate.m */,
 				57A618A02235658D00229485 /* LaunchScreen.storyboard */,
+				57A618A32235658D00229485 /* Info.plist */,
 				57A618A42235658D00229485 /* main.m */,
 			);
-			path = App;
+			path = Application;
 			sourceTree = "<group>";
 		};
-		5705130D224D7E57005EEC9A /* GameViewController */ = {
+		5705130D224D7E57005EEC9A /* Controllers */ = {
 			isa = PBXGroup;
 			children = (
 				57A618AC2235795500229485 /* GameViewController.h */,
 				57A618AB2235795500229485 /* GameViewController.m */,
 			);
-			path = GameViewController;
+			path = Controllers;
 			sourceTree = "<group>";
 		};
 		57A618892235658B00229485 = {
@@ -78,11 +77,9 @@
 		57A618942235658B00229485 /* Ping-Pong-Game */ = {
 			isa = PBXGroup;
 			children = (
-				5705130B224D7E1B005EEC9A /* App */,
-				5705130D224D7E57005EEC9A /* GameViewController */,
-				57A6189B2235658B00229485 /* Main.storyboard */,
+				5705130B224D7E1B005EEC9A /* Application */,
+				5705130D224D7E57005EEC9A /* Controllers */,
 				57A6189E2235658D00229485 /* Assets.xcassets */,
-				57A618A32235658D00229485 /* Info.plist */,
 			);
 			path = "Ping-Pong-Game";
 			sourceTree = "<group>";
@@ -146,7 +143,6 @@
 			files = (
 				57A618A22235658D00229485 /* LaunchScreen.storyboard in Resources */,
 				57A6189F2235658D00229485 /* Assets.xcassets in Resources */,
-				57A6189D2235658B00229485 /* Main.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -166,14 +162,6 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXVariantGroup section */
-		57A6189B2235658B00229485 /* Main.storyboard */ = {
-			isa = PBXVariantGroup;
-			children = (
-				57A6189C2235658B00229485 /* Base */,
-			);
-			name = Main.storyboard;
-			sourceTree = "<group>";
-		};
 		57A618A02235658D00229485 /* LaunchScreen.storyboard */ = {
 			isa = PBXVariantGroup;
 			children = (
@@ -303,14 +291,14 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = YX6VKW92JQ;
-				INFOPLIST_FILE = "Ping-Pong-Game/Info.plist";
+				INFOPLIST_FILE = "Ping-Pong-Game/Application/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = "artemkufaev.Ping-Pong-Game";
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				TARGETED_DEVICE_FAMILY = "1,2";
+				TARGETED_DEVICE_FAMILY = 1;
 			};
 			name = Debug;
 		};
@@ -320,14 +308,14 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = YX6VKW92JQ;
-				INFOPLIST_FILE = "Ping-Pong-Game/Info.plist";
+				INFOPLIST_FILE = "Ping-Pong-Game/Application/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = "artemkufaev.Ping-Pong-Game";
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				TARGETED_DEVICE_FAMILY = "1,2";
+				TARGETED_DEVICE_FAMILY = 1;
 			};
 			name = Release;
 		};
